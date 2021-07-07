@@ -9,22 +9,11 @@
 function [git_info] = GetGitInfo
 
 %find git directory
-directory_search = [pwd filesep];
-while 1
-    %search
-    git_info.directory_git = [directory_search '.git' filesep];
-    if exist(git_info.directory_git, 'dir')
-        break;
-    end
-    
-    %not found - look in parent dir
-    fileseps = find(directory_search==filesep);
-    if length(fileseps) <= 1
-        %stop if no more parent directories to search
-        error('The current directory does not appear to be part of a git repo!')
-    else
-        directory_search = directory_search(1:fileseps(end-1));
-    end
+git_info.directory_git = GetGitDir;
+
+%no directory?
+if ~ischar(git_info.directory_git)
+    error('The current directory does not appear to be part of a git repo!')
 end
 
 %check current branch
